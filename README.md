@@ -45,13 +45,11 @@ At this time it is set up to use the following:
 Before you get started you will need to do the following:
 
 1. Register an API key from [https://getpocket.com/developer/](https://getpocket.com/developer/)
-2. Create a keys.json file in the root directory of the project with the
+2. Create a key.json file in the root directory of the project with the
    folowing format:
 
 ```json
-{
-  "browserName": "key"
-}
+"key"
 ```
 
 3. During the build process it will inject the key into the manifest file
@@ -79,7 +77,7 @@ Running `npm run storybook` will open a development envorinment to allow for bui
 
 ##### _Production_
 
-Run `npm run release`
+Run `npm run build && web-ext -s build build`
 
 This will create an optimized build, zip it up, and place it inside `_releases` at the root
 directory.

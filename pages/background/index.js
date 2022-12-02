@@ -31,7 +31,7 @@ chrome.runtime.onInstalled.addListener(function () {
 
 /* Browser Action - Toolbar
 –––––––––––––––––––––––––––––––––––––––––––––––––– */
-chrome.action.onClicked.addListener(handle.browserAction)
+chrome.browserAction.onClicked.addListener(handle.browserAction)
 
 chrome.commands.onCommand.addListener((command, tab) => {
   if (command === 'save-to-pocket-action') handle.browserAction(tab)

@@ -8,17 +8,18 @@ import json from '@rollup/plugin-json'
 import replace from '@rollup/plugin-replace'
 import copy from 'rollup-plugin-copy'
 import resolve from '@rollup/plugin-node-resolve'
-import { chromeExtension } from 'rollup-plugin-chrome-extension'
+import webExtension from "@samrum/rollup-plugin-web-extension";
 import { emptyDir } from 'rollup-plugin-empty-dir'
 import zip from 'rollup-plugin-zip'
-import keys from './keys.json' // See README on how to get a key
+import key from './key.json' // See README on how to get a key
+import manifest from './manifest.json'
+import pkg from './package.json'
 
 const isRelease = process.env.IS_RELEASE === 'true'
 
 const projectRootDir = path.resolve(__dirname)
 
 export default {
-  input: 'src/manifest.json',
   output: {
     dir: 'build',
     format: 'esm',
@@ -29,17 +30,22 @@ export default {
     warn(warning)
   },
   plugins: [
-    chromeExtension({ verbose: false }),
+    webExtension({
+      manifest: {
+        ...manifest,
+        version: pkg.version,
+      },
+    }),
     alias({
       entries: {
-        actions: path.resolve(projectRootDir, 'src/actions.js'),
-        assets: path.resolve(projectRootDir, 'src/assets'),
-        common: path.resolve(projectRootDir, 'src/common'),
-        components: path.resolve(projectRootDir, 'src/components'),
-        connectors: path.resolve(projectRootDir, 'src/connectors'),
-        containers: path.resolve(projectRootDir, 'src/containers'),
-        pages: path.resolve(projectRootDir, 'src/pages'),
-        _locales: path.resolve(projectRootDir, 'src/_locales')
+        actions: path.resolve(projectRootDir, 'actions.js'),
+        assets: path.resolve(projectRootDir, 'assets'),
+        common: path.resolve(projectRootDir, 'common'),
+        components: path.resolve(projectRootDir, 'components'),
+        connectors: path.resolve(projectRootDir, 'connectors'),
+        containers: path.resolve(projectRootDir, 'containers'),
+        pages: path.resolve(projectRootDir, 'pages'),
+        _locales: path.resolve(projectRootDir, '_locales')
       },
     }),
     // Replace environment variables
@@ -50,11 +56,11 @@ export default {
     }),
     replace({
       preventAssignment: false,
-      __consumerKey__: keys.chrome,
+      __consumerKey__: key,
     }),
     resolve(),
     commonjs({
-      exclude: 'src/**',
+      exclude: '!(node_modules/**)',
     }),
     linaria(),
     json(),
@@ -68,9 +74,9 @@ export default {
     emptyDir(),
     copy({
       targets: [
-        { src: 'src/assets/fonts/*', dest: 'build/assets/fonts' },
-        { src: 'src/assets/images/*', dest: 'build/assets/images' },
-        { src: 'src/_locales/*', dest: 'build/_locales' },
+        { src: 'assets/fonts/*', dest: 'build/assets/fonts' },
+        { src: 'assets/images/*', dest: 'build/assets/images' },
+        { src: '_locales/*', dest: 'build/_locales' },
       ],
       hook: 'writeBundle',
     }),

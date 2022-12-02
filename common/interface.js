@@ -17,12 +17,12 @@ export function openTabWithUrl(url, inBackground) {
 –––––––––––––––––––––––––––––––––––––––––––––––––– */
 export function setDefaultIcon() {
   const imageData = inactiveIcon()
-  chrome.action.setIcon({ imageData })
+  chrome.browserAction.setIcon({ imageData })
 }
 
 export function setToolbarIcon(tabId, isSaved) {
   const imageData = isSaved ? savedIcon() : inactiveIcon()
-  chrome.action.setIcon({ tabId, imageData })
+  chrome.browserAction.setIcon({ tabId, imageData })
 }
 
 export function savedIcon() {
